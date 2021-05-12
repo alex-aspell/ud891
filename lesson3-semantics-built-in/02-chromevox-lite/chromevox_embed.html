@@ -67,10 +67,67 @@ button {
 }
 
 button#toggle-cvox {
+<<<<<<< HEAD
 padding: 0;
 border: 0;
 background-color: F79539;
 padding: 3px;
+=======
+  border: 1px solid rgba(0, 0, 0, 0);
+  background-color: #2196F3;
+  padding: 2px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 100;
+}
+
+span#cvox-logo {
+  border: 1px solid rgba(0, 0, 0, 0);
+  background-color: hsl(29, 92%, 60%);
+  padding: 2px;
+  border-radius: 3px;
+}
+
+body:not([enabled]) span#cvox-logo {
+  background-color: #9E9E9E;
+}
+
+body:not([enabled]) span#cvox-logo img.enabled {
+  display: none;
+}
+
+body[enabled] span#cvox-logo img.enabled {
+  display: initial;
+}
+
+body:not([enabled]) span#cvox-logo img.disabled {
+  display: initial;
+}
+
+body[enabled] span#cvox-logo img.disabled {
+  display: none;
+}
+
+button#toggle-cvox:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+button#toggle-cvox span {
+  font-size: 18px;
+  color: white;
+  margin: 0px 5px;
+}
+
+body:not([enabled]) button#toggle-cvox span#disable-cvox {
+  display: none;
+}
+
+body[enabled] button#toggle-cvox span#enable-cvox {
+  display: none;
+>>>>>>> Managing-focus
 }
 
 .cvoxembed button {
@@ -88,13 +145,24 @@ padding: 3px;
   display: flex;
   align-items: center;
 }
+
 </style>
 </head>
 <body>
+<<<<<<< HEAD
 
 <div id="shade" class="shade" aria=hidden="true">
   <button id="toggle-cvox"><img height="24" width="24" src="chromevox-no-background.svg" alt="Enable ChromeVox" title="Enable ChromeVox"></button>
   <span id="caption"></span>
+=======
+<div id="shade" class="shade" aria=hidden="true">
+  <span id="cvox-logo">
+    <img height="24" width="24" src="chromevox-no-background.svg" alt="ChromeVox Lite logo" class="enabled">
+    <img height="24" width="24" src="chromevox-no-background-off.svg" alt="ChromeVox Lite disabled logo" class="disabled">
+  </span>
+  <span id="caption"></span>
+  <button id="toggle-cvox"><span id="enable-cvox">Enable ChromeVox Lite</span><span id="disable-cvox">Disable ChromeVox Lite</button>
+>>>>>>> Managing-focus
 </div>
 <div id="cvoxembed" class="cvoxembed" aria-hidden="true">
   <div class="content">
@@ -107,7 +175,8 @@ padding: 3px;
       <span>
         Speech rate:
         <select id="rates">
-          <option value="1.0">Beginner</option>
+          <option value="1.0">Slow</option>
+          <option value="1.2" selected>Default</option>
           <option value="1.8">Intermediate</option>
           <option value="3.0">
               Advanced (normal for a blind person)
@@ -116,8 +185,13 @@ padding: 3px;
       </span>
       <span>
         Navigate:
+<<<<<<< HEAD
         <button id="next">Next</button>
         <button id="previous">Previous</button>
+=======
+        <button id="previous">Previous</button>
+        <button id="next">Next</button>
+>>>>>>> Managing-focus
         <button id="click">Click</button>
         <button id="heading">Heading</button>
         <button id="top">Top</button>
@@ -140,11 +214,12 @@ var rates = $('rates');
 var volumeControl = $('volume');
 
 var ctrls = embed.querySelectorAll('button,select');
-var enabled;
 
 function cvoxEmbedEnable() {
+  if (document.body.hasAttribute('enabled'))
+    return;
   window.parent.postMessage('enable', '*');
-  enabled = true;
+  document.body.setAttribute('enabled', '');
   for (var i = 0; i < ctrls.length; i++) {
     ctrls[i].disabled = false;
     ctrls[i].tabIndex = -1;
@@ -152,10 +227,17 @@ function cvoxEmbedEnable() {
 }
 
 function cvoxEmbedDisable() {
+  if (!document.body.hasAttribute('enabled'))
+    return;
+
   window.parent.postMessage('disable', '*');
   caption.innerHTML = '';
 
+<<<<<<< HEAD
   enabled = false;
+=======
+  document.body.removeAttribute('enabled');
+>>>>>>> Managing-focus
   for (var i = 0; i < ctrls.length; i++)
     ctrls[i].disabled = true;
 }
@@ -163,7 +245,11 @@ function cvoxEmbedDisable() {
 cvoxEmbedDisable();
 
 $('toggle-cvox').addEventListener('click', function(e) {
+<<<<<<< HEAD
   if (enabled)
+=======
+  if (document.body.hasAttribute('enabled'))
+>>>>>>> Managing-focus
     cvoxEmbedDisable();
   else
     cvoxEmbedEnable();
@@ -213,6 +299,11 @@ function matchesSelector(element, selector) {
  * @return {boolean} Whether the two language match.
  */
 function langsMatch(lang1, lang2) {
+  if (lang1 === lang2)
+    return true;
+
+  if (lang1.trim() === '' || lang2.trim() === '')
+    return false;
   var lang1Test = document.createElement('test');
   lang1Test.lang = lang1;
   var lang2Test = document.createElement('test');
@@ -289,14 +380,25 @@ window.addEventListener('message', function(e) {
     return;
   var command = e.data.command;
   switch (command) {
+  case 'enable':
+    cvoxEmbedEnable();
+    break;
   case 'speak':
+<<<<<<< HEAD
     console.log("data", e.data, speechQueue);
+=======
+    console.log('speak', e.data);
+>>>>>>> Managing-focus
     var text = e.data.text;
     var queueMode = e.data.queueMode;
     var params = e.data.params;
     if (queueMode == 0)
       caption.innerHTML = '';
+<<<<<<< HEAD
     else
+=======
+    else if (caption.textContent !== '')
+>>>>>>> Managing-focus
       caption.innerHTML += ',&nbsp;'
     var str = '<span>' + text + '</span>&nbsp;&nbsp;';
     if (params.pitch < 0.5)
@@ -308,10 +410,15 @@ window.addEventListener('message', function(e) {
       speechQueue.length = 0;
     }
 
-    speechQueue.push({text: text, queueMode: queueMode, params: params});
+    if (text.trim() !== '')
+      speechQueue.push({text: text, queueMode: queueMode, params: params});
     speakNextUtterance();
     break;
   case 'stop':
+<<<<<<< HEAD
+=======
+    caption.innerHTML = '';
+>>>>>>> Managing-focus
     speechSynthesis.cancel();
     break;
   case 'setLang':

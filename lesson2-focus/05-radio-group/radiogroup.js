@@ -32,9 +32,9 @@
         e.preventDefault();
 
         if (this.focusedIdx === 0) {
-          this.focusedIdx = this.buttons.length - 1;
+          this.focusedIdx = 0;
         } else {
-          this.focusedIdx--;
+        this.focusedIdx--
         }
 
         break;
@@ -49,15 +49,15 @@
         if (this.focusedIdx === this.buttons.length - 1) {
           this.focusedIdx = 0;
         } else {
-          this.focusedIdx++;
+          this.focusedIdx++
         }
-
+        
         break;
       }
 
     }
-    
-    this.changeFocus(this.focusedIdx);
+
+    this.changeFocus(this.focusedIdx); // <-- Hmm, interesting...
   };
 
   RadioGroup.prototype.changeFocus = function(idx) {
@@ -69,7 +69,7 @@
     this.focusedButton = this.buttons[idx];
     this.focusedButton.tabIndex = 0;
     this.focusedButton.focus();
-    this.focusedButton.setAttribute('checked', '');
+    this.focusedButton.setAttribute('checked', 'checked');
   };
 
   var group1 = new RadioGroup('#group1');
